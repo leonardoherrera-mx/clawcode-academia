@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ClawCode">
+<title>ClawCode Academia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior: smooth; }
+
+  :root {
+    --bg: #0a0a0f;
+    --header-bg: linear-gradient(135deg, #0d0d14 0%, #1a1520 100%);
+    --header-border: rgba(200,169,110,0.2);
+    --text: #e8e4dc;
+    --text2: #c8c4bc;
+    --text-muted: #8a8178;
+    --text-faint: #5a5550;
+    --text-dimmer: #7a7168;
+    --text-dimmest: #4a4540;
+    --accent: #c8a96e;
+    --card-bg: rgba(255,255,255,0.02);
+    --card-border: rgba(255,255,255,0.06);
+    --card-hover: rgba(255,255,255,0.04);
+    --input-bg: rgba(255,255,255,0.05);
+    --input-border: rgba(255,255,255,0.1);
+    --input-focus: rgba(200,169,110,0.3);
+    --nav-bg: rgba(0,0,0,0.3);
+    --highlight: rgba(200,169,110,0.25);
+    --btn-border: rgba(200,169,110,0.3);
+    --btn-disabled: #3a3530;
+    --dropdown-bg: #14141c;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f3ef;
+    --header-bg: linear-gradient(135deg, #ffffff 0%, #f0ece6 100%);
+    --header-border: rgba(160,130,80,0.25);
+    --text: #1a1815;
+    --text2: #2e2a24;
+    --text-muted: #6a6358;
+    --text-faint: #9a9488;
+    --text-dimmer: #7a7468;
+    --text-dimmest: #b0a898;
+    --accent: #9a7b3c;
+    --card-bg: rgba(255,255,255,0.8);
+    --card-border: rgba(0,0,0,0.08);
+    --card-hover: rgba(255,255,255,1);
+    --input-bg: rgba(255,255,255,0.9);
+    --input-border: rgba(0,0,0,0.12);
+    --input-focus: rgba(154,123,60,0.4);
+    --nav-bg: rgba(255,255,255,0.85);
+    --highlight: rgba(154,123,60,0.2);
+    --btn-border: rgba(154,123,60,0.35);
+    --btn-disabled: #ccc8c0;
+    --dropdown-bg: #ffffff;
+    --shadow: rgba(0,0,0,0.15);
+  }
+
+  body {
+    font-family: 'Inter', 'Georgia', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* Header */
+  .header {
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--header-border);
+    padding: 14px 16px;
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .header-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand { font-size: 14px; font-weight: 400; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
+  .brand-sub { font-size: 9px; letter-spacing: 1.5px; color: var(--text-dimmer); text-transform: uppercase; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .back-btn {
+    background: none; border: 1px solid var(--btn-border); color: var(--accent);
+    padding: 5px 10px; cursor: pointer; font-size: 11px; letter-spacing: 0.5px;
+    border-radius: 2px; flex-shrink: 0; font-family: inherit;
+  }
+  .theme-btn {
+    background: none; border: 1px solid var(--btn-border); color: var(--accent);
+    padding: 5px 10px; cursor: pointer; font-size: 11px; letter-spacing: 0.5px;
+    border-radius: 2px; flex-shrink: 0; white-space: nowrap; font-family: inherit;
+  }
+
+  /* Search */
+  .search-wrap {
+    position: relative;
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--input-bg); border: 1px solid var(--input-border);
+    border-radius: 4px; padding: 7px 12px; transition: border-color 0.2s;
+  }
+  .search-box:focus-within { border-color: var(--input-focus); }
+  .search-icon { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+  .search-input {
+    background: none; border: none; outline: none; color: var(--text);
+    font-size: 13px; width: 100%; font-family: inherit;
+  }
+  .search-input::placeholder { color: var(--text-faint); }
+  .search-clear {
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 13px; padding: 0 2px; font-family: inherit;
+  }
+  .search-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+    background: var(--dropdown-bg); border: 1px solid var(--card-border);
+    border-radius: 4px; margin-top: 4px; max-height: 60vh; overflow-y: auto;
+    box-shadow: 0 8px 32px var(--shadow);
+  }
+  .search-item {
+    padding: 10px 14px; cursor: pointer;
+    border-bottom: 1px solid var(--card-border); transition: background 0.15s;
+  }
+  .search-item:active { background: var(--card-hover); }
+  .search-item-title { font-size: 12px; font-weight: 500; }
+  .search-item-module { font-size: 10px; color: var(--text-faint); margin-top: 1px; }
+  .search-item-snippet { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+  .search-no-results {
+    padding: 16px; text-align: center; font-size: 12px; color: var(--text-faint);
+  }
+  mark { background: var(--highlight); color: var(--accent); padding: 1px 2px; border-radius: 2px; }
+
+  /* Content area */
+  .content { padding: 12px 16px 80px; flex: 1; }
+
+  /* Section header */
+  .section-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .section-tag { font-size: 9px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 3px; text-transform: uppercase; }
+  .section-title { font-size: 18px; font-weight: 400; line-height: 1.3; }
+  .section-sub { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+
+  /* Module card */
+  .mod-card {
+    margin-bottom: 8px; padding: 14px 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-left: 3px solid; cursor: pointer; transition: all 0.15s;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mod-card:active { background: var(--card-hover); }
+  .mod-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .mod-sub { font-size: 10px; color: var(--text-dimmer); }
+  .mod-meta { font-size: 9px; color: var(--text-faint); white-space: nowrap; }
+  .mod-arrow { font-size: 13px; flex-shrink: 0; margin-left: 8px; }
+
+  /* Lesson card */
+  .lesson-card {
+    margin-bottom: 6px; padding: 11px 14px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-left: 3px solid; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .lesson-card:active { background: var(--card-hover); }
+  .lesson-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; flex-shrink: 0;
+  }
+  .lesson-title { flex: 1; font-size: 13px; font-weight: 500; }
+  .lesson-arrow { font-size: 12px; flex-shrink: 0; }
+
+  /* Lesson content */
+  .lesson-body {
+    padding: 16px; background: var(--card-bg); border: 1px solid var(--card-border);
+    border-left: 3px solid; white-space: pre-line;
+    font-size: 13px; line-height: 1.8; color: var(--text2);
+  }
+
+  /* Footer nav */
+  .nav-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 10px 16px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--header-border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 40;
+  }
+  .nav-btn {
+    background: none; border: 1px solid var(--btn-border);
+    padding: 8px 14px; cursor: pointer; font-size: 11px;
+    letter-spacing: 0.5px; border-radius: 2px; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .nav-btn:disabled { cursor: default; }
+  .nav-center { font-size: 9px; letter-spacing: 0.5px; color: var(--text-faint); }
+
+  /* Menu footer */
+  .menu-footer {
+    padding: 14px 16px; border-top: 1px solid var(--header-border);
+    text-align: center; font-size: 9px; color: var(--text-dimmest); letter-spacing: 1px;
+    background: var(--nav-bg);
+  }
+
+  /* Hint */
+  .hint { padding: 8px 16px 0; font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+  @media (min-width: 768px) {
+    .header { padding: 18px 24px; }
+    .content { padding: 16px 24px 80px; }
+    .section-header { padding: 18px 24px 12px; }
+    .brand { font-size: 16px; }
+    .section-title { font-size: 22px; }
+    .mod-card { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const modules = [
+  {id:"m0",icon:"🧠",title:"Módulo 0: Conceptos Fundamentales",color:"#c8a96e",subtitle:"Antes de tocar herramientas, entiende el terreno",lessons:[
+    {title:"¿Qué es un LLM?",content:"Un LLM (Large Language Model) es un modelo de inteligencia artificial entrenado con enormes cantidades de texto. No \"piensa\" como un humano — predice la siguiente palabra más probable basándose en patrones estadísticos de billones de textos.\n\nANALOGÍA SIMPLE:\nImagina que leíste todos los libros, artículos, códigos y conversaciones del internet. Ahora alguien te hace una pregunta y tú respondes basándote en TODO lo que leíste. Eso es un LLM.\n\n¿POR QUÉ IMPORTA ENTENDER ESTO?\n• No es magia — tiene limitaciones predecibles\n• No \"recuerda\" conversaciones pasadas por defecto\n• Cada sesión nueva empieza sin contexto previo\n• La calidad de tu pregunta determina la calidad de la respuesta\n\nEJEMPLOS DE LLMs:\n• Claude (Anthropic) — el que usamos\n• GPT-4 (OpenAI)\n• Gemini (Google)\n• LLaMA (Meta, open source)\n• Mistral (europeo, open source)"},
+    {title:"LLM vs Chatbot vs IA vs Agente",content:"Estos términos se confunden constantemente. Aquí la diferencia real:\n\n🤖 IA (Inteligencia Artificial)\nEl campo completo. Todo sistema que simula inteligencia humana. Es como decir \"vehículo\" — abarca coches, aviones, bicicletas.\n\n📊 LLM (Large Language Model)\nUn TIPO de IA. Específicamente: modelos de lenguaje masivos. Es el \"motor\" que entiende y genera texto. Claude es un LLM.\n\n💬 CHATBOT\nUna INTERFAZ. Es la caja donde escribes y recibes respuestas. Claude Chat es un chatbot powered by un LLM. Pero un chatbot puede ser tan simple como un menú de opciones (\"presione 1 para ventas\").\n\n🦾 AGENTE\nUn LLM CON HERRAMIENTAS. Un agente no solo responde — ACTÚA. Puede ejecutar código, navegar la web, enviar emails, mover archivos. La diferencia clave: autonomía para tomar acciones en el mundo real.\n\nNUESTRO STACK:\n• Claude Chat = Chatbot (conversas, preguntas, análisis)\n• Claude Code = Agente de desarrollo (ejecuta código, crea proyectos)\n• Claude Cowork = Agente de productividad (archivos, documentos, automatización)\n• OpenClaw = Agente 24/7 multicanal (WhatsApp, Telegram, siempre activo)\n\nPUNTO CLAVE PARA TU CLIENTE:\n\"No vendemos un chatbot. Vendemos un EQUIPO de agentes IA especializados que trabajan las 24 horas.\""},
+    {title:"La Terminal y el CLI",content:"La terminal es tu línea directa con la computadora. Sin ventanas bonitas, sin botones — solo texto.\n\n¿QUÉ ES EL CLI?\nCLI = Command Line Interface (Interfaz de Línea de Comandos). Es la forma de hablar con tu computadora escribiendo instrucciones en texto.\n\n¿POR QUÉ ES IMPORTANTE?\n• Claude Code vive en la terminal\n• OpenClaw se controla desde la terminal\n• Muchas herramientas profesionales SOLO funcionan en CLI\n• Es más rápido y poderoso que hacer click\n\nCOMANDOS MÍNIMOS DE SUPERVIVENCIA:\n  ls              → ver archivos en la carpeta actual\n  cd carpeta      → entrar a una carpeta\n  cd ..           → salir/retroceder una carpeta\n  pwd             → ¿dónde estoy?\n  mkdir nombre    → crear carpeta\n  clear           → limpiar pantalla\n  ctrl + C        → CANCELAR/DETENER lo que está corriendo\n  ↑ (flecha)      → repetir último comando\n\nPARA MAC:\n• La terminal se llama \"Terminal\" (búscala en Spotlight)\n• También puedes usar iTerm2 (más potente)\n\nPARA WINDOWS:\n• Usa PowerShell o Windows Terminal\n• O instala WSL (Windows Subsystem for Linux)\n\nREGLA DE ORO:\nSi algo sale mal y no sabes qué hacer: Ctrl+C (cancela) y luego pregúntale a Claude Chat qué pasó."},
+    {title:"Sesiones, Gateway y Memoria",content:"Este es EL concepto más importante que tu cliente debe entender antes de todo lo demás.\n\n¿QUÉ ES UNA SESIÓN?\nUna sesión es una \"conversación activa\" con la IA. Cuando abres Claude Code o OpenClaw, inicias una sesión. Cuando cierras o se desconecta, la sesión termina.\n\n⚠️ PUNTO CRÍTICO:\nOpenClaw puede PERDER MEMORIA al cambiar de sesión. Esto pasa porque cada nueva sesión es como un \"nuevo día\" para el agente. No recuerda lo que hiciste ayer.\n\n¿QUÉ ES UN GATEWAY?\nEl gateway es el \"cerebro central\" de OpenClaw. Es un servidor que:\n• Recibe mensajes de todos los canales (WhatsApp, Telegram)\n• Los procesa con el LLM (Claude)\n• Envía respuestas de vuelta\n• Mantiene las skills y configuraciones\n\nSi el gateway se cae → OpenClaw deja de responder.\n\nCÓMO VERIFICAR QUE ESTÁ ACTIVO:\n  openclaw status        → ver estado del gateway\n  openclaw restart       → reiniciar si no responde\n  openclaw logs          → ver qué está pasando\n\nMEMORIA — CÓMO RECUPERARLA:\nClaude Code: Tiene mejor memoria porque trabaja con archivos. Puede revisar su historial con CLAUDE.md y archivos del proyecto.\n\nOpenClaw: Más volátil. Soluciones:\n• Usar skills con almacenamiento persistente\n• Crear archivos de contexto que el agente lee al iniciar\n• Configurar memoria explícita en el gateway\n\nEN CELULAR:\nOpenClaw funciona igual vía WhatsApp/Telegram. PERO: las sesiones son más cortas y la memoria es más frágil. Siempre dale contexto al inicio."},
+    {title:"Variables de Entorno y Configuración",content:"Las variables de entorno son \"secretos\" que tu computadora guarda para que los programas los usen sin que tú los escribas cada vez.\n\nANALOGÍA:\nEs como guardar tus contraseñas en un lugar seguro. En vez de escribir tu API key cada vez, la guardas una vez y los programas la leen automáticamente.\n\nEJEMPLO REAL:\n  ANTHROPIC_API_KEY=sk-ant-xxxxx\n  OPENAI_API_KEY=sk-xxxxx\n  GITHUB_TOKEN=ghp_xxxxx\n\n¿DÓNDE SE GUARDAN?\nEn Mac/Linux: archivo ~/.bashrc o ~/.zshrc\nEn Windows: Panel de Control → Variables de entorno\nCon un archivo .env en la carpeta del proyecto\n\n¿POR QUÉ IMPORTA?\n• Claude Code necesita tu ANTHROPIC_API_KEY para funcionar\n• OpenClaw necesita keys para conectarse a canales\n• Si pierdes una key o la expones públicamente → riesgo de seguridad\n\nREGLAS DE SEGURIDAD:\n1. NUNCA subas un archivo .env a GitHub\n2. NUNCA compartas API keys por WhatsApp o email\n3. Si una key se filtró → revócala inmediatamente\n4. Usa un password manager para guardarlas\n\nCOMANDO ÚTIL:\n  echo $ANTHROPIC_API_KEY    → verificar si está configurada\n  export MI_VARIABLE=\"valor\" → crear variable temporal\n  source ~/.zshrc            → recargar variables"},
+    {title:"Herramientas del CLI: Homebrew, npm y más",content:"Tu terminal puede instalar herramientas automáticamente con \"gestores de paquetes\". Piensa en ellos como una App Store para la terminal.\n\nHOMEBREW (solo Mac/Linux)\nEl gestor de paquetes más popular para Mac.\n  brew install node      → instala Node.js\n  brew install git       → instala Git\n  brew update            → actualiza Homebrew\n  brew list              → ver qué tienes instalado\n\nNPM (Node Package Manager)\nViene con Node.js. Instala herramientas JavaScript.\n  npm install -g vercel    → instala Vercel CLI\n  npm install -g openclaw  → instala OpenClaw\n  npm list -g              → ver paquetes globales\n\nHERRAMIENTAS QUE USAREMOS:\n\nVercel → Deploy de sitios web desde el CLI\n  vercel           → deploy rápido\n  vercel --prod    → deploy a producción\n\nRender → Hosting de servidores y APIs\n\nGit → Control de versiones\n  git status       → ¿qué cambié?\n  git add .        → preparar cambios\n  git commit -m \"mensaje\" → guardar snapshot\n  git push         → subir a GitHub\n\nREGLA: No necesitas memorizar todo. Necesitas saber que EXISTEN y preguntarle a Claude cuando los necesites."},
+    {title:"MCP Servers — Conectando Herramientas",content:"MCP = Model Context Protocol. Es la forma en que Claude Code se conecta con herramientas externas.\n\nANALOGÍA:\nImagina que Claude Code es un chef. Los MCP servers son los proveedores que le traen ingredientes: uno trae Google Calendar, otro trae GitHub, otro trae tu base de datos.\n\n¿QUÉ PUEDE HACER UN MCP?\n• Leer y escribir en Google Drive\n• Gestionar tu calendario\n• Interactuar con bases de datos\n• Conectar con APIs externas\n• Acceder a archivos del sistema\n• Navegar la web\n\n¿CÓMO SE CONFIGURAN?\n1. Se definen en un archivo de configuración JSON\n2. Claude Code los carga al iniciar\n3. Aparecen como herramientas disponibles\n\nMCPs QUE USAREMOS:\n• Google Calendar MCP — gestión de agenda\n• Google Drive MCP — archivos y documentos\n• Gmail MCP — lectura y envío de correos\n• GitHub MCP — repositorios y código\n• Browser MCP — navegación web automatizada\n• File System MCP — archivos locales\n\nPUNTO CLAVE PARA CLIENTES:\nLos MCPs son lo que convierte a Claude Code de \"chatbot que escribe código\" en \"agente que opera tu negocio\". Sin MCPs, solo habla. Con MCPs, ACTÚA."},
+    {title:"Commits y Control de Versiones",content:"Git es tu \"máquina del tiempo\" para proyectos. Cada commit es un punto al que puedes regresar.\n\n¿QUÉ ES UN COMMIT?\nUn snapshot (foto) de tu proyecto en un momento específico. Si algo se rompe, regresas al último commit que funcionaba.\n\nFLUJO BÁSICO:\n1. Haces cambios en archivos\n2. git add . → preparas los cambios\n3. git commit -m \"qué hice\" → guardas el snapshot\n4. git push → subes a GitHub (nube)\n\n¿POR QUÉ ES CRÍTICO?\n• Claude Code hace commits automáticamente a veces\n• Si OpenClaw pierde configuración, la recuperas del último commit\n• Es tu backup profesional\n• Los clientes NECESITAN entender esto para no perder trabajo\n\nCOMANDOS DE EMERGENCIA:\n  git log --oneline       → ver historial de cambios\n  git diff                → ver qué cambió\n  git stash               → guardar cambios temporalmente\n  git checkout archivo    → deshacer cambios en un archivo\n\nPARA CLIENTES:\nNo necesitan dominar Git. Necesitan entender:\n1. \"Commit\" = guardaste tu progreso\n2. \"Push\" = lo subiste a la nube\n3. \"Si algo se rompe, podemos regresar\""},
+    {title:"Comandos de Supervivencia — Cheat Sheet",content:"IMPRIME ESTO. Es tu salvavidas cuando algo no funciona.\n\n═══ TERMINAL BÁSICA ═══\n  ctrl + C         DETENER cualquier proceso\n  ctrl + Z         Pausar proceso (fg para reanudar)\n  clear            Limpiar pantalla\n  ↑ ↓              Navegar historial de comandos\n  tab              Autocompletar nombres\n\n═══ CLAUDE CODE ═══\n  claude           Iniciar Claude Code\n  claude --version Verificar versión\n  /exit            Salir de Claude Code\n  /clear           Limpiar contexto\n  /help            Ver comandos disponibles\n\n═══ OPENCLAW ═══\n  openclaw status     ¿Está corriendo?\n  openclaw start      Iniciar gateway\n  openclaw stop       Detener gateway\n  openclaw restart    Reiniciar (si no responde)\n  openclaw logs       Ver qué está pasando\n  openclaw skills     Listar skills activos\n\n═══ GIT (EMERGENCIAS) ═══\n  git status          ¿Qué cambió?\n  git log --oneline   Historial rápido\n  git stash           Guardar cambios sin commit\n  git stash pop       Recuperar cambios guardados\n\n═══ SI TODO FALLA ═══\n  1. ctrl + C (cancelar)\n  2. openclaw restart / reiniciar terminal\n  3. Pregúntale a Claude Chat qué pasó\n  4. Revisa openclaw logs\n  5. Contacta soporte ClawCode"}
+  ]},
+  {id:"m1",icon:"⚡",title:"Módulo 1: El Ecosistema ClawCode",color:"#7eb8da",subtitle:"Claude Code + OpenClaw + Cowork + DocuBot: qué es cada uno",lessons:[
+    {title:"Claude Code — Tu Desarrollador IA",content:"Claude Code es un agente de desarrollo que vive en tu terminal. No solo responde preguntas — ejecuta código, crea archivos, configura servidores.\n\n¿QUÉ PUEDE HACER?\n• Escribir programas completos desde cero\n• Modificar código existente\n• Crear sitios web, APIs, automatizaciones\n• Instalar y configurar herramientas\n• Hacer debug (encontrar y arreglar errores)\n• Gestionar tu proyecto con Git\n\n¿EN QUÉ ES DIFERENTE A CLAUDE CHAT?\nClaude Chat: le preguntas, te responde con texto.\nClaude Code: le pides, y EJECUTA. Crea archivos reales, corre comandos reales, modifica tu sistema real.\n\nLIMITACIONES:\n• Solo funciona cuando tú lo invocas (no es 24/7)\n• Cada sesión tiene un límite de contexto\n• Puede cometer errores — siempre revisa lo que hace\n• Necesita tu aprobación para acciones destructivas\n\nMEMORIA:\nClaude Code tiene buena memoria dentro de un proyecto porque puede leer archivos previos. El archivo CLAUDE.md en cada proyecto es su \"memoria a largo plazo\"."},
+    {title:"OpenClaw — Tu Asistente 24/7",content:"OpenClaw es un gateway personal que conecta un LLM (Claude) con canales de comunicación. Funciona las 24 horas, los 7 días.\n\n¿QUÉ ES UN GATEWAY?\nEs un servidor que recibe mensajes de cualquier canal (WhatsApp, Telegram, Slack) y los procesa con IA.\n\n¿QUÉ PUEDE HACER?\n• Responder mensajes en WhatsApp/Telegram\n• Ejecutar tareas programadas (cron jobs)\n• Controlar un navegador web\n• Ejecutar skills (automatizaciones)\n• Procesar documentos e imágenes\n\nDIFERENCIA CLAVE CON CLAUDE CODE:\nClaude Code = tú lo invocas, él ejecuta, tú cierras.\nOpenClaw = siempre está encendido, esperando instrucciones.\n\nARQUITECTURA:\n  [WhatsApp] ──→\n  [Telegram] ──→  [Gateway] ──→ [Claude LLM] ──→ Respuesta\n  [Slack]    ──→      ↓\n                 [Skills activos]\n\n⚠️ PUNTOS DE FALLA COMUNES:\n1. El gateway se detiene → openclaw restart\n2. Pierde conexión al LLM → verificar API key\n3. Un canal se desconecta → re-autenticar\n4. Pierde memoria → proveer contexto o reiniciar skill"},
+    {title:"Claude Cowork — Tu Oficina Digital",content:"Cowork es la versión de escritorio de Claude para tareas de oficina. No es para código — es para productividad.\n\n¿QUÉ PUEDE HACER?\n• Crear documentos (.docx, .pptx, .xlsx, .pdf)\n• Organizar archivos y carpetas\n• Procesar emails y generar borradores\n• Analizar datos y crear reportes\n• Automatizar tareas repetitivas de oficina\n• Navegar la web y extraer información\n\n¿CUÁNDO USAR COWORK vs CODE vs CHAT?\n\nEscenario: \"Necesito un reporte financiero\"\n→ Cowork: crea el .docx formateado y listo\n\nEscenario: \"Necesito un sistema de facturación\"\n→ Code: programa la aplicación\n\nEscenario: \"¿Cuál es la mejor estrategia de pricing?\"\n→ Chat: análisis y conversación\n\nEL ROL EN CLAWCODE SERVICES:\nCowork es nuestro COO digital. Gestiona:\n• Pipeline de ventas\n• Calendario de contenido\n• Reportes semanales\n• Templates de sesiones\n• Documentación del negocio"},
+    {title:"Diferencias y Sinergias",content:"MAPA DE CADA HERRAMIENTA:\n\n         │ Chat    │ Code      │ Cowork  │ OpenClaw\n─────────┼─────────┼───────────┼─────────┼──────────\nInterfaz │ Web/App │ Terminal  │ Desktop │ WhatsApp\nFunción  │ Conversar│Desarrollar│ Oficina │ Asistir 24/7\nEjecuta  │ No      │ Sí código │ Sí docs │ Sí skills\nMemoria  │ Sesión  │ Proyecto  │ Sesión  │ Config\n24/7     │ No      │ No        │ No      │ SÍ\n\nCÓMO SE POTENCIAN:\n1. Chat diseña la estrategia\n2. Code construye la infraestructura\n3. Cowork crea los documentos y reportes\n4. OpenClaw opera todo las 24 horas\n\nEJEMPLO REAL — FLUJO DE UN CLIENTE:\nDía: Chat analiza métricas → Code despliega actualización\nNoche: OpenClaw sigue respondiendo clientes por WhatsApp\nMañana: Cowork genera reporte con lo que pasó\n\nESTO ES LO QUE VENDEMOS:\nNo es una herramienta. Es un ECOSISTEMA OPERATIVO."},
+    {title:"Skills de OpenClaw",content:"Los Skills son \"superpoderes\" que le agregas a OpenClaw. Cada skill es una capacidad específica.\n\n¿QUÉ ES UN SKILL?\nUn programa que le dice a OpenClaw cómo hacer una tarea. Sin skills, solo conversa. Con skills, ACTÚA.\n\n5 SKILLS EJEMPLO:\n\n1️⃣ CALENDAR BRIEFING\nTrigger: Cada mañana a las 7am\nAcción: Resume tu agenda y la envía por WhatsApp\nValor: Empiezas el día sabiendo qué tienes\n\n2️⃣ LEAD QUALIFIER\nTrigger: Alguien escribe al WhatsApp\nAcción: Califica al prospecto y agenda demo\nValor: No pierdes leads por no responder\n\n3️⃣ CONTENT REPURPOSER\nTrigger: Cuando le envías una transcripción\nAcción: Genera posts para todas las redes\nValor: 2hrs de sesión = 1 semana de contenido\n\n4️⃣ INVOICE TRACKER\nTrigger: Cada viernes a las 10am\nAcción: Revisa pagos y envía recordatorios\nValor: Nunca se te olvida cobrar\n\n5️⃣ SESSION NOTES\nTrigger: Cuando le compartes link de tl;dv\nAcción: Genera resumen y action items\nValor: Documentación automática"},
+    {title:"DocuBot — Tu Vida Digital Organizada",content:"DocuBot es nuestro producto estrella. Organiza toda la vida digital del cliente.\n\n¿QUÉ PROBLEMA RESUELVE?\nEl profesional promedio tiene información en: Gmail, Drive, WhatsApp, notas del teléfono, Notion, carpetas locales... DocuBot lo unifica TODO.\n\n\"CONFIGURADO Y FUNCIONANDO\" SIGNIFICA:\n1. Conectamos las fuentes del cliente (Gmail, Drive, Calendar)\n2. Configuramos reglas de organización personalizadas\n3. Hacemos la primera ingesta de datos\n4. Verificamos que todo se clasifica correctamente\n5. Entrenamos al cliente en cómo usarlo\n6. Lo dejamos corriendo automáticamente\n\nNO es: \"aquí tienes un link, instálalo tú\"\nSÍ es: \"ya está todo conectado y funcionando con tus datos\"\n\nPRICING STANDALONE:\n• Setup: $15,000 MXN\n• Mensualidad: $2,000 MXN\n• Incluido gratis en paquetes Core, Premium y Enterprise\n\nPOR QUÉ ES PRODUCTO ESTRELLA:\nEs tangible. El cliente lo usa CADA DÍA. \"Pregúntale a DocuBot dónde está ese contrato que firmamos en enero.\""}
+  ]},
+  {id:"m2",icon:"🔧",title:"Módulo 2: Setup & Instalación",color:"#8bc5a3",subtitle:"Semana 1 — Instalación práctica con fundamentos",lessons:[
+    {title:"Sesión 1: Fundamentos + Claude Code Setup",content:"DURACIÓN: 2 horas\nFORMATO: 70% práctica, 20% slides, 10% docs\n\nBLOQUE 1 (40 min) — FUNDAMENTOS\n• ¿Qué es un LLM y cómo funciona?\n• La Terminal: navegación básica\n  → Ejercicio: navegar carpetas, crear archivos\n• Variables de entorno: qué son y dónde se guardan\n• Homebrew: instalación y uso básico\n\nBLOQUE 2 (50 min) — INSTALACIÓN CLAUDE CODE\n• Verificar Node.js (node --version)\n• Instalar Claude Code paso a paso\n• Configurar ANTHROPIC_API_KEY\n• Primer comando: \"Dime qué puedes hacer\"\n• Ejercicio: resolver una tarea REAL del cliente\n\nBLOQUE 3 (20 min) — SEGURIDAD\n• Qué NUNCA compartir (API keys, .env)\n• Cómo Claude Code pide permisos\n• Qué hacer cuando algo sale mal (ctrl+C)\n• Comandos de supervivencia (cheat sheet)\n\nBLOQUE 4 (10 min) — CIERRE\n• Resumen + tarea: usar Code para 3 tareas personales\n• Entrega de manual + acceso a panel de soporte\n\nENTREGABLES:\n✓ Claude Code instalado y funcionando\n✓ Cheat sheet de comandos\n✓ Acceso al panel de cliente\n✓ Manual \"Primeros Pasos\""},
+    {title:"Sesión 2: OpenClaw + DocuBot + Memoria",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (30 min) — CONCEPTOS CRÍTICOS\n• Sesiones y gateway (10 min)\n• Memoria y contexto: por qué se pierde (10 min)\n• MCP Servers: qué son y por qué importan (5 min)\n• Git y commits: tu máquina del tiempo (5 min)\n\nBLOQUE 2 (40 min) — INSTALACIÓN OPENCLAW\n• Instalar OpenClaw desde terminal\n• Configurar gateway con API key\n• Conectar WhatsApp o Telegram\n• Verificar que responde\n• Explicar: openclaw status, restart, logs\n\nBLOQUE 3 (30 min) — DOCUBOT SETUP\n• Configurar DocuBot personalizado\n• Conectar fuentes: Gmail, Drive, Calendar\n• Primera ingesta de datos\n• Demostrar búsqueda inteligente\n\nBLOQUE 4 (15 min) — MANEJO DE PROBLEMAS\n• ¿OpenClaw no responde? → status → restart → logs\n• ¿Perdió memoria? → Contexto → Config files\n• ¿Cómo usar el panel de cliente?\n• Cuándo contactar soporte vs resolver solo\n\nBLOQUE 5 (5 min) — CIERRE\n• Tarea: usar OpenClaw para 5 tareas vía WhatsApp\n• Tarea: pedirle a DocuBot que busque 3 documentos"}
+  ]},
+  {id:"m3",icon:"🚀",title:"Módulo 3: Productividad Avanzada",color:"#d4a0d0",subtitle:"Semana 2 — Claude Code avanzado + OpenClaw en acción",lessons:[
+    {title:"Sesión 3: Claude Code Avanzado",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (40 min) — PROYECTOS COMPLEJOS\n• Crear proyecto desde cero (sitio web o app)\n• Uso de CLAUDE.md como memoria\n• Multi-archivo: proyectos grandes\n• Ejercicio: crear landing page del cliente\n\nBLOQUE 2 (30 min) — MCP EN PRÁCTICA\n• Configurar Google Calendar MCP\n• Configurar GitHub MCP\n• Ejercicio: \"Claude, agenda una junta\"\n• Ejercicio: \"Claude, crea un repo\"\n\nBLOQUE 3 (30 min) — DEPLOY\n• Vercel: deploy desde CLI\n• Render: backends\n• Google Console: configuración básica\n• Ejercicio: poner en línea el sitio creado\n\nBLOQUE 4 (20 min) — DEBUGGING\n• Cuándo Code se equivoca y cómo corregir\n• Leer errores: tienen estructura\n• Ejercicio: romper algo y que Claude lo arregle\n\nENTREGABLES:\n✓ Sitio web del cliente en línea\n✓ MCPs configurados\n✓ Cliente capaz de crear proyectos"},
+    {title:"Sesión 4: OpenClaw — Skills y Automatización",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (30 min) — SKILLS AVANZADOS\n• Anatomía de un skill: trigger, instrucciones, herramientas\n• Crear primer skill personalizado del cliente\n• Ejemplo: resumen diario automático\n• Activar y probar en vivo\n\nBLOQUE 2 (30 min) — BROWSER CONTROL\n• OpenClaw puede navegar la web por ti\n• Automatizar tarea repetitiva en un sitio web\n• Limitaciones y cuándo NO usar\n• Ejercicio práctico\n\nBLOQUE 3 (30 min) — CRON JOBS\n• Tareas automáticas: diarias, semanales, mensuales\n• Ejemplo: reporte semanal cada viernes\n• Monitorear ejecución correcta\n\nBLOQUE 4 (20 min) — WORKFLOWS\n• Combinar skills en secuencias\n• Ejemplo: Prospecto → Calificación → Demo → Follow-up\n• Diseñar workflow personalizado\n\nBLOQUE 5 (10 min) — RESUMEN SEMANA 2\n• Lo que sabe vs hace una semana\n• Revisión de dudas\n• Siguiente: aplicar todo a su negocio real"}
+  ]},
+  {id:"m4",icon:"🏢",title:"Módulo 4: Casos de Uso por Negocio",color:"#e8b87a",subtitle:"Semana 3 — Aplicación real al negocio del cliente",lessons:[
+    {title:"Sesión 5: Tu Negocio con Agentes IA",content:"DURACIÓN: 2 horas — 100% PERSONALIZADA\n\nBLOQUE 1 (30 min) — MAPEO DE PROCESOS\n• Flujo de trabajo actual del cliente\n• Tareas repetitivas (>2 veces/semana)\n• Cuellos de botella\n• Clasificar: Code, OpenClaw, o Cowork?\n\nBLOQUE 2 (50 min) — IMPLEMENTACIÓN EN VIVO\n• Automatización #1: tarea más repetitiva\n• Automatización #2: cuello de botella principal\n• Automatización #3: \"la que siempre quise\"\n\nBLOQUE 3 (25 min) — MEDICIÓN DE IMPACTO\n• Tiempo antes vs ahora\n• Dinero ahorrado\n• Documentar ROI\n\nBLOQUE 4 (15 min) — SOFTWARE PRIVADO\n• Tiene API → conexión directa vía MCP\n• Solo web → browser control de OpenClaw\n• Base de datos → MCP personalizado\n• Sin API → exportar/importar archivos"},
+    {title:"Sesión 6: DocuBot Mastery + Dashboard",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (30 min) — DOCUBOT AVANZADO\n• Categorías avanzadas\n• Templates personalizados\n• Flujos automáticos: email → clasificación → acción\n• Búsqueda avanzada\n\nBLOQUE 2 (40 min) — DASHBOARD DE CLIENTE\n• Crear dashboard personalizado\n• Estado de agentes, tareas, métricas\n• Panel de soporte integrado\n• Ejercicio: cliente navega su dashboard\n\nBLOQUE 3 (30 min) — CENTRO DE CONTROL\n• Vista de todos los agentes activos\n• Estado de cada uno (activo, pausado, error)\n• Logs simplificados\n• Resolver problemas sin contactar soporte\n\nBLOQUE 4 (20 min) — COMUNICACIÓN INTERNA\n• Canal de comunicación con ClawCode\n• Cómo reportar problemas\n• Protocolo: self-service → asistente → humano\n\nENTREGABLES:\n✓ DocuBot 100% personalizado\n✓ Dashboard de cliente funcionando\n✓ Centro de control de agentes\n✓ Canal de soporte configurado"}
+  ]},
+  {id:"m5",icon:"🎓",title:"Módulo 5: Independencia & Certificación",color:"#7aaed4",subtitle:"Semana 4 — Volando solo + integración total",lessons:[
+    {title:"Sesión 7: Troubleshooting Mastery",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (40 min) — PROBLEMAS Y SOLUCIONES\n\nEscenario 1: \"OpenClaw no responde\"\n→ openclaw status → logs → restart\n→ verificar API key → internet → soporte\n\nEscenario 2: \"Claude Code da error\"\n→ Leer error → pegar en Claude Chat\n→ Si es permisos: verificar acceso\n\nEscenario 3: \"Perdió la memoria\"\n→ OpenClaw: dar contexto inicial\n→ Code: verificar CLAUDE.md\n→ DocuBot: verificar conexiones\n\nEscenario 4: \"El sitio no carga\"\n→ Verificar deploy (vercel/render)\n→ DNS puede tardar 48hrs\n→ Ver logs\n\nEscenario 5: \"Skill dejó de funcionar\"\n→ openclaw skills → verificar activo\n→ Revisar logs → recrear si necesario\n\nBLOQUE 2 (30 min) — MANTENIMIENTO\n• Actualizar Claude Code y OpenClaw\n• Cuándo actualizar (y cuándo NO tocar)\n• Backup de configuraciones\n\nBLOQUE 3 (30 min) — SEGURIDAD\n• Rotación de API keys (cada 90 días)\n• Revisar permisos de MCPs\n• Datos que NUNCA poner en un agente\n\nBLOQUE 4 (20 min) — PLAN POST-PROGRAMA\n• Skills que el cliente quiere crear\n• Métricas a monitorear\n• Sesiones mensuales (Premium)"},
+    {title:"Sesión 8: Demo y Certificación",content:"DURACIÓN: 2 horas\n\nBLOQUE 1 (45 min) — DEMO DEL CLIENTE\nEl cliente demuestra que puede:\n✓ Usar Claude Code para crear un proyecto\n✓ Hacer deploy (Vercel)\n✓ Usar OpenClaw vía WhatsApp\n✓ Crear o modificar un skill\n✓ Usar DocuBot\n✓ Resolver un problema sin ayuda\n✓ Navegar su dashboard\n\nNO ES UN EXAMEN. Es una celebración.\n\nBLOQUE 2 (30 min) — OPTIMIZACIÓN\n• Revisión de todo el stack\n• Ajustes finales\n• Último skill personalizado\n• Verificar que todo corre bien\n\nBLOQUE 3 (20 min) — CERTIFICACIÓN\n• Entrega de Certificado ClawCode (PDF)\n• Foto para redes (contenido)\n• Testimonial del cliente\n\nBLOQUE 4 (25 min) — ONBOARDING\n• Acceso a comunidad privada\n• Programa de referidos (10% comisión)\n• Calendario de sesiones mensuales (Premium)\n• Directorio de recursos\n\nENTREGABLES FINALES:\n✓ Certificado de completación\n✓ Documentación completa\n✓ Acceso a comunidad\n✓ Manual de troubleshooting\n✓ Dashboard activo\n✓ Agentes corriendo"}
+  ]},
+  {id:"m6",icon:"📦",title:"Paquetes de Servicio",color:"#d48a7a",subtitle:"Pricing actualizado — Core, Premium, Enterprise",lessons:[
+    {title:"Core — $100,000 MXN",content:"EL PAQUETE BASE.\n\nINCLUYE:\n✦ Instalación Claude Code + OpenClaw + DocuBot\n✦ 4 semanas de capacitación (2 × 2hrs/sem = 16 hrs)\n✦ Grabación de todas las sesiones\n✦ Documentación personalizada\n✦ Cheat sheets + manual troubleshooting\n✦ Dashboard de cliente con asistente\n✦ Soporte por WhatsApp durante programa\n✦ Acceso a comunidad privada\n\nMÓDULOS:\nSemana 1: Fundamentos + Setup\nSemana 2: Productividad Avanzada\nSemana 3: Casos de Uso del Negocio\nSemana 4: Independencia + Certificación\n\nPERFIL IDEAL:\n• Profesional independiente o pyme (<5 personas)\n• Quiere automatizar su operación\n• Presupuesto de inversión en tecnología\n\nROI ESPERADO:\n2 hrs/día ahorradas × $500/hr = $22,000/mes\nRecupera inversión en 4.5 meses."},
+    {title:"Premium — $180,000 MXN",content:"PARA MÁS PROFUNDIDAD Y ACOMPAÑAMIENTO.\n\nTODO DEL CORE +\n✦ 3 skills personalizados para OpenClaw\n✦ Integración con herramientas existentes\n  → APIs, software privado, bases de datos\n✦ 4 semanas de capacitación (igual que Core)\n✦ 3 sesiones mensuales de optimización\n  → 1 sesión/mes × 3 meses = 6 hrs adicionales\n✦ Prioridad en features de DocuBot\n✦ Dashboard avanzado con métricas\n\nDIFERENCIA VS CORE:\nCore: instalamos y capacitamos.\nPremium: instalamos, capacitamos, Y OPTIMIZAMOS 3 meses.\n\nLas 3 sesiones mensuales:\n• Mes 1: dudas de uso real\n• Mes 2: optimiza workflows con datos reales\n• Mes 3: escala lo que funciona\n\nPERFIL IDEAL:\n• Pyme con 5-20 empleados\n• Múltiples herramientas de software\n• Necesita integraciones personalizadas"},
+    {title:"Enterprise — $350,000+ MXN",content:"TRANSFORMACIÓN COMPLETA PARA EQUIPOS.\n\nTODO DEL PREMIUM +\n✦ Hasta 10 personas\n✦ Agentes IA por departamento\n✦ Integración con CRM, ERP, etc.\n✦ Capacitación on-site disponible\n✦ SLA de soporte dedicado\n  → SLA = Service Level Agreement\n  → Tiempo de respuesta garantizado\n  → Canal exclusivo + persona asignada\n✦ Co-desarrollo de soluciones\n✦ Dashboard empresarial por departamento\n\nSOFTWARE PRIVADO — SÍ ES POSIBLE:\n→ Tiene API: conexión directa vía MCP\n→ Solo web: browser control\n→ Base de datos: MCP personalizado\n→ Sin API: export/import automatizado\n\nPRICING:\nBase: $350,000 MXN (hasta 10 personas)\n+$25,000 por persona adicional\nCustom: se cotiza según complejidad"},
+    {title:"DocuBot Standalone — $15,000 MXN",content:"SOLO ORGANIZACIÓN DIGITAL.\n\nSETUP: $15,000 MXN (una vez)\n• Configuración personalizada\n• Conexión de fuentes (Gmail, Drive, Calendar)\n• Categorización personalizada\n• Sesión de entrenamiento 1 hora\n• Manual de uso\n\nMENSUALIDAD: $2,000 MXN\n• Mantenimiento y actualizaciones\n• Soporte por chat\n\n\"CONFIGURADO Y FUNCIONANDO\":\n1. Videollamada de setup\n2. Conectamos sus fuentes una por una\n3. Configuramos reglas de organización\n4. Primera ingesta de datos\n5. Verificamos clasificación\n6. Enseñamos a buscar y preguntar\n7. Verificamos al día siguiente\n8. Lo dejamos corriendo\n\nIncluido GRATIS en Core, Premium y Enterprise.\n\nESTRATEGIA:\nDocuBot es la puerta de entrada. Un cliente que compra DocuBot, en 3-6 meses quiere el paquete completo."}
+  ]}
+];
+
+// ═══════════════════════════════════════════════
+// APP STATE & RENDERING
+// ═══════════════════════════════════════════════
+let state = { view: "menu", moduleId: null, lessonIdx: 0, search: "", searchOpen: false, theme: "dark" };
+
+function setState(updates) {
+  Object.assign(state, updates);
+  render();
+}
+
+function escapeHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function highlightSearch(text, query) {
+  if (!query || query.length < 2) return escapeHtml(text);
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return escapeHtml(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+}
+
+function search(query) {
+  if (!query || query.length < 2) return [];
+  const q = query.toLowerCase();
+  const results = [];
+  modules.forEach(mod => {
+    mod.lessons.forEach((lesson, li) => {
+      const tm = lesson.title.toLowerCase().includes(q);
+      const cm = lesson.content.toLowerCase().includes(q);
+      if (tm || cm) {
+        let snippet = "";
+        if (cm) {
+          const idx = lesson.content.toLowerCase().indexOf(q);
+          const s = Math.max(0, idx - 50);
+          const e = Math.min(lesson.content.length, idx + q.length + 50);
+          snippet = (s > 0 ? "..." : "") + lesson.content.slice(s, e) + (e < lesson.content.length ? "..." : "");
+        }
+        results.push({ moduleId: mod.id, moduleTitle: mod.title, moduleIcon: mod.icon, moduleColor: mod.color, lessonIdx: li, lessonTitle: lesson.title, snippet });
+      }
+    });
+  });
+  return results.slice(0, 12);
+}
+
+function getMod() { return modules.find(m => m.id === state.moduleId); }
+function getModIdx() { return modules.findIndex(m => m.id === state.moduleId); }
+
+function renderHeader(showBack, backLabel, backFn, subtitle) {
+  const results = search(state.search);
+  return `
+    <div class="header">
+      <div class="header-top">
+        <div class="header-left">
+          ${showBack ? `<button class="back-btn" onclick="${backFn}">← ${backLabel}</button>` : ''}
+          <div>
+            <div class="brand">${showBack ? '' : 'ClawCode Academia'}</div>
+            ${subtitle ? `<div class="brand-sub">${subtitle}</div>` : (!showBack ? '<div class="brand-sub">Plataforma de Aprendizaje</div>' : '')}
+          </div>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()">${state.theme === 'dark' ? '☀ Claro' : '◑ Oscuro'}</button>
+      </div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span class="search-icon">&#128269;</span>
+          <input class="search-input" type="text" placeholder="Buscar en todos los modulos..." value="${escapeHtml(state.search)}" oninput="onSearch(this.value)" onfocus="setState({searchOpen:true})">
+          ${state.search ? '<button class="search-clear" onclick="clearSearch()">✕</button>' : ''}
+        </div>
+        ${state.searchOpen && results.length > 0 ? `
+          <div class="search-dropdown">
+            ${results.map((r,i) => `
+              <div class="search-item" onclick="goToResult('${r.moduleId}',${r.lessonIdx})">
+                <div class="search-item-title" style="color:${r.moduleColor}">${r.moduleIcon} ${escapeHtml(r.lessonTitle)}</div>
+                <div class="search-item-module">${escapeHtml(r.moduleTitle)}</div>
+                ${r.snippet ? `<div class="search-item-snippet">${highlightSearch(r.snippet, state.search)}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+        ${state.searchOpen && state.search.length >= 2 && results.length === 0 ? `
+          <div class="search-dropdown"><div class="search-no-results">No se encontraron resultados para "${escapeHtml(state.search)}"</div></div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function renderNav(leftLabel, leftFn, leftDisabled, rightLabel, rightFn, rightDisabled, center) {
+  return `
+    <div class="nav-footer">
+      <button class="nav-btn" onclick="${leftFn}" ${leftDisabled ? 'disabled' : ''} style="color:${leftDisabled ? 'var(--btn-disabled)' : 'var(--accent)'}">← ${leftLabel}</button>
+      <span class="nav-center">${center}</span>
+      <button class="nav-btn" onclick="${rightFn}" ${rightDisabled ? 'disabled' : ''} style="color:${rightDisabled ? 'var(--btn-disabled)' : 'var(--accent)'}">${rightLabel} →</button>
+    </div>
+  `;
+}
+
+function render() {
+  document.body.setAttribute('data-theme', state.theme);
+  const app = document.getElementById('app');
+
+  if (state.view === "menu") {
+    app.innerHTML = `
+      ${renderHeader()}
+      <div class="hint">Selecciona un modulo para comenzar.</div>
+      <div class="content">
+        ${modules.map(m => `
+          <div class="mod-card" style="border-left-color:${m.color}66" onclick="goToModule('${m.id}')"
+            ontouchstart="this.style.background='var(--card-hover)'" ontouchend="this.style.background='var(--card-bg)'">
+            <div>
+              <div class="mod-title" style="color:${m.color}">${m.icon} ${m.title}</div>
+              <div class="mod-sub">${m.subtitle}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="mod-meta">${m.lessons.length} lec</span>
+              <span class="mod-arrow" style="color:${m.color}">→</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="menu-footer">ClawCode Services — ${modules.length} Modulos — ${modules.reduce((a,m)=>a+m.lessons.length,0)} Lecciones</div>
+    `;
+  }
+
+  else if (state.view === "module") {
+    const mod = getMod();
+    const idx = getModIdx();
+    app.innerHTML = `
+      ${renderHeader(true, 'MODULOS', "goBack()", `${mod.icon} ${mod.title}`)}
+      <div class="section-header">
+        <div class="section-title" style="color:${mod.color}">${mod.icon} ${mod.title}</div>
+        <div class="section-sub">${mod.subtitle}</div>
+      </div>
+      <div class="content">
+        ${mod.lessons.map((l,i) => `
+          <div class="lesson-card" style="border-left-color:${mod.color}44" onclick="goToLesson(${i})"
+            ontouchstart="this.style.background='var(--card-hover)'" ontouchend="this.style.background='var(--card-bg)'">
+            <div class="lesson-num" style="border-color:${mod.color}44;color:${mod.color}">${i+1}</div>
+            <div class="lesson-title">${l.title}</div>
+            <span class="lesson-arrow" style="color:${mod.color}">→</span>
+          </div>
+        `).join('')}
+      </div>
+      ${renderNav('MOD. ANT.', 'prevModule()', idx===0, 'SIG. MOD.', 'nextModule()', idx===modules.length-1, `${idx+1} / ${modules.length}`)}
+    `;
+  }
+
+  else if (state.view === "lesson") {
+    const mod = getMod();
+    const midx = getModIdx();
+    const lesson = mod.lessons[state.lessonIdx];
+    const isLast = state.lessonIdx === mod.lessons.length - 1;
+    const isLastMod = midx === modules.length - 1;
+    app.innerHTML = `
+      ${renderHeader(true, 'LECCIONES', "goBack()", `${mod.icon} ${mod.title}`)}
+      <div class="section-header">
+        <div class="section-tag">LECCION ${state.lessonIdx+1} DE ${mod.lessons.length}</div>
+        <div class="section-title" style="color:${mod.color}">${lesson.title}</div>
+      </div>
+      <div class="content">
+        <div class="lesson-body" style="border-left-color:${mod.color}44">${escapeHtml(lesson.content)}</div>
+      </div>
+      ${renderNav(
+        'ANTERIOR', 'prevLesson()', state.lessonIdx===0,
+        isLast ? 'SIG. MOD.' : 'SIGUIENTE',
+        isLast ? 'nextModule()' : 'nextLesson()',
+        isLast && isLastMod,
+        `Mod ${midx+1} — ${state.lessonIdx+1}/${mod.lessons.length}`
+      )}
+    `;
+  }
+
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════
+// GLOBAL FUNCTIONS
+// ═══════════════════════════════════════════════
+window.goToModule = (id) => setState({ view: "module", moduleId: id, lessonIdx: 0, searchOpen: false, search: "" });
+window.goToLesson = (i) => setState({ view: "lesson", lessonIdx: i, searchOpen: false, search: "" });
+window.goToResult = (modId, li) => setState({ view: "lesson", moduleId: modId, lessonIdx: li, searchOpen: false, search: "" });
+window.goBack = () => {
+  if (state.view === "lesson") setState({ view: "module" });
+  else if (state.view === "module") setState({ view: "menu", moduleId: null });
+};
+window.nextLesson = () => { const m = getMod(); if (state.lessonIdx < m.lessons.length - 1) setState({ lessonIdx: state.lessonIdx + 1 }); };
+window.prevLesson = () => { if (state.lessonIdx > 0) setState({ lessonIdx: state.lessonIdx - 1 }); };
+window.nextModule = () => { const i = getModIdx(); if (i < modules.length - 1) setState({ view: "module", moduleId: modules[i+1].id, lessonIdx: 0 }); };
+window.prevModule = () => { const i = getModIdx(); if (i > 0) setState({ view: "module", moduleId: modules[i-1].id, lessonIdx: 0 }); };
+window.onSearch = (v) => setState({ search: v, searchOpen: true });
+window.clearSearch = () => setState({ search: "", searchOpen: false });
+window.toggleTheme = () => setState({ theme: state.theme === "dark" ? "light" : "dark" });
+window.setState = setState;
+
+// Close search dropdown on outside tap
+document.addEventListener('click', (e) => {
+  if (state.searchOpen && !e.target.closest('.search-wrap')) {
+    setState({ searchOpen: false });
+  }
+});
+
+// Initial render
+render();
+</script>
+</body>
+</html>
