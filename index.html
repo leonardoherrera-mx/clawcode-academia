@@ -230,6 +230,86 @@
   /* Hint */
   .hint { padding: 8px 16px 0; font-size: 11px; color: var(--text-muted); font-style: italic; }
 
+  /* Progress badge */
+  .progress-badge {
+    display: inline-block; padding: 2px 7px; border-radius: 10px;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+  }
+  .progress-badge.done { background: rgba(100,200,120,0.2); color: #6ac878; }
+  .progress-badge.pending { background: rgba(200,169,110,0.15); color: var(--accent); }
+
+  /* Quiz */
+  .quiz-container { margin-top: 16px; }
+  .quiz-title {
+    font-size: 14px; font-weight: 600; color: var(--accent);
+    margin-bottom: 12px; letter-spacing: 0.5px;
+  }
+  .quiz-question {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    padding: 14px; margin-bottom: 10px; border-radius: 4px;
+  }
+  .quiz-q-text { font-size: 13px; font-weight: 500; margin-bottom: 10px; line-height: 1.5; }
+  .quiz-option {
+    display: block; width: 100%; text-align: left;
+    background: var(--input-bg); border: 1px solid var(--input-border);
+    color: var(--text); padding: 10px 12px; margin-bottom: 6px;
+    font-size: 12px; cursor: pointer; border-radius: 3px;
+    font-family: inherit; transition: all 0.15s; line-height: 1.4;
+  }
+  .quiz-option:active { background: var(--card-hover); }
+  .quiz-option.correct { background: rgba(100,200,120,0.2); border-color: #6ac878; color: #6ac878; }
+  .quiz-option.wrong { background: rgba(220,80,80,0.15); border-color: #dc5050; color: #dc5050; }
+  .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+  .quiz-result {
+    text-align: center; padding: 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 4px; margin-top: 12px;
+  }
+  .quiz-score { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .quiz-pass { color: #6ac878; font-size: 13px; margin-top: 6px; }
+  .quiz-fail { color: #dc5050; font-size: 13px; margin-top: 6px; }
+  .quiz-retry {
+    background: none; border: 1px solid var(--btn-border); color: var(--accent);
+    padding: 8px 16px; cursor: pointer; font-size: 12px; border-radius: 3px;
+    margin-top: 10px; font-family: inherit;
+  }
+
+  /* Contact form */
+  .contact-section {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    padding: 20px 16px; margin-top: 12px; border-radius: 4px;
+  }
+  .contact-title { font-size: 16px; font-weight: 500; color: var(--accent); margin-bottom: 4px; }
+  .contact-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+  .form-group { margin-bottom: 12px; }
+  .form-label { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+    color: var(--text); padding: 10px 12px; font-size: 13px; border-radius: 3px;
+    font-family: inherit; transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--input-focus); }
+  .form-textarea { min-height: 80px; resize: vertical; }
+  .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+  .form-submit {
+    width: 100%; background: var(--accent); color: #0a0a0f; border: none;
+    padding: 12px; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+    cursor: pointer; border-radius: 3px; font-family: inherit;
+    text-transform: uppercase; transition: opacity 0.2s;
+  }
+  .form-submit:active { opacity: 0.8; }
+  .form-success { text-align: center; padding: 20px; color: #6ac878; font-size: 14px; }
+
+  /* Feature card for content gen */
+  .feature-card {
+    background: linear-gradient(135deg, var(--card-bg), rgba(200,169,110,0.05));
+    border: 1px solid var(--accent); border-radius: 4px;
+    padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s;
+  }
+  .feature-card:active { background: var(--card-hover); }
+  .feature-title { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .feature-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
   @media (min-width: 768px) {
     .header { padding: 18px 24px; }
     .content { padding: 16px 24px 80px; }
@@ -293,9 +373,69 @@ const modules = [
 ];
 
 // ═══════════════════════════════════════════════
+// QUIZ DATA — 3-5 preguntas por módulo
+// ═══════════════════════════════════════════════
+const quizzes = {
+  m0: [
+    {q:"¿Qué es un LLM?",opts:["Un chatbot de atención al cliente","Un modelo de IA entrenado con grandes cantidades de texto","Un tipo de base de datos","Un lenguaje de programación"],correct:1},
+    {q:"¿Cuál es la diferencia clave entre un chatbot y un agente?",opts:["El agente es más caro","El chatbot es más inteligente","El agente ejecuta acciones, el chatbot solo responde","No hay diferencia real"],correct:2},
+    {q:"Si OpenClaw deja de responder, ¿cuál es el primer comando?",opts:["openclaw delete","openclaw status","rm -rf /","restart computer"],correct:1},
+    {q:"¿Dónde se guardan las variables de entorno en Mac?",opts:["En Google Drive","En el archivo ~/.zshrc o .env","En WhatsApp","En Vercel"],correct:1},
+    {q:"¿Qué hace un MCP Server?",opts:["Reemplaza a Claude Code","Conecta a Claude con herramientas externas (Calendar, GitHub, etc.)","Es un antivirus","Hace backups automáticos"],correct:1}
+  ],
+  m1: [
+    {q:"¿Claude Code y OpenClaw son lo mismo?",opts:["Sí, es la misma herramienta","No — Code desarrolla, OpenClaw opera 24/7","No — Code es gratis, OpenClaw es de pago","Sí, pero con diferente nombre"],correct:1},
+    {q:"¿Qué es un Skill de OpenClaw?",opts:["Un curso en línea","Una automatización específica que le agregas","Un tipo de API key","Un comando de terminal"],correct:1},
+    {q:"¿Cuándo usas Cowork vs Code?",opts:["Cowork para código, Code para documentos","Cowork para documentos/oficina, Code para programar","Son intercambiables","Nunca se usan juntos"],correct:1},
+    {q:"\"Configurado y funcionando\" de DocuBot significa:",opts:["Te mandamos un link para que lo instales","Ya conectamos sus fuentes, verificamos y lo dejamos corriendo","Solo le damos acceso al software","Le mandamos un PDF con instrucciones"],correct:1}
+  ],
+  m2: [
+    {q:"¿Qué es lo PRIMERO que debe entender el cliente antes de instalar?",opts:["El precio de Claude","Fundamentos: terminal, CLI, sesiones","Cómo hacer un sitio web","Marketing digital"],correct:1},
+    {q:"¿Qué pasa si compartes tu API key públicamente?",opts:["Nada, es pública","Riesgo de seguridad — revócala inmediatamente","Te dan más créditos","Se activa 2FA automáticamente"],correct:1},
+    {q:"El archivo CLAUDE.md sirve para:",opts:["Decorar el repositorio","Dar memoria persistente a Claude Code entre sesiones","Enviar emails","Configurar WhatsApp"],correct:1}
+  ],
+  m3: [
+    {q:"¿Qué comando sube tu sitio a producción en Vercel?",opts:["vercel --prod","npm start","git commit","vercel delete"],correct:0},
+    {q:"Si Claude Code comete un error, ¿qué haces?",opts:["Borras todo y empiezas de cero","Lees el error, lo pegas en Claude Chat para entenderlo","Cierras la computadora","Ignoras el error"],correct:1},
+    {q:"Un cron job en OpenClaw es:",opts:["Una tarea que se ejecuta automáticamente en horarios programados","Un tipo de database","Un comando para borrar archivos","Una skill que solo funciona una vez"],correct:0}
+  ],
+  m4: [
+    {q:"Si el software del cliente no tiene API, ¿se puede integrar?",opts:["No, imposible","Sí — browser control o export/import automatizado","Solo si es open source","Solo con Enterprise"],correct:1},
+    {q:"¿Qué es un SLA?",opts:["Un tipo de inteligencia artificial","Service Level Agreement — tiempos de respuesta garantizados","Un lenguaje de programación","Un plugin de WordPress"],correct:1},
+    {q:"El Dashboard de cliente sirve para:",opts:["Ver Netflix","Monitorear agentes, tareas y resolver problemas sin depender de soporte","Solo decoración","Enviar facturas"],correct:1}
+  ],
+  m5: [
+    {q:"Si OpenClaw pierde memoria, la mejor solución es:",opts:["Reinstalar todo","Dar contexto inicial y usar archivos de configuración persistentes","Comprar más RAM","Cambiar de herramienta"],correct:1},
+    {q:"¿Cada cuánto se deben rotar las API keys?",opts:["Nunca","Cada 90 días","Cada hora","Solo cuando se filtran"],correct:1},
+    {q:"La sesión de certificación es:",opts:["Un examen escrito de 3 horas","Una demo donde el cliente demuestra que puede operar el sistema","Un webinar genérico","Una encuesta de satisfacción"],correct:1}
+  ],
+  m6: [
+    {q:"¿Cuánto cuesta el paquete Core?",opts:["$10,000 MXN","$50,000 MXN","$100,000 MXN","$350,000 MXN"],correct:2},
+    {q:"¿Qué incluye Premium que NO incluye Core?",opts:["Instalación de Claude Code","3 skills personalizados + integraciones + 3 sesiones mensuales","Acceso a internet","Manual de usuario"],correct:1},
+    {q:"DocuBot Standalone cuesta:",opts:["$100,000 MXN setup","$15,000 MXN setup + $2,000/mes","Es gratis","$350,000 MXN"],correct:1}
+  ]
+};
+
+// ═══════════════════════════════════════════════
+// PROGRESS — localStorage persistence
+// ═══════════════════════════════════════════════
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('homero-progress') || '{}'); } catch { return {}; }
+}
+function saveProgress(moduleId, score, total) {
+  const p = getProgress();
+  p[moduleId] = { score, total, passed: score >= Math.ceil(total * 0.8), date: new Date().toISOString().split('T')[0] };
+  localStorage.setItem('homero-progress', JSON.stringify(p));
+}
+function isModulePassed(moduleId) {
+  const p = getProgress();
+  return p[moduleId] && p[moduleId].passed;
+}
+
+// ═══════════════════════════════════════════════
 // APP STATE & RENDERING
 // ═══════════════════════════════════════════════
-let state = { view: "menu", moduleId: null, lessonIdx: 0, search: "", searchOpen: false, theme: "dark" };
+let state = { view: "menu", moduleId: null, lessonIdx: 0, search: "", searchOpen: false, theme: "dark", quizAnswers: {}, quizDone: false, contactSent: false };
 
 function setState(updates) {
   Object.assign(state, updates);
@@ -390,23 +530,40 @@ function render() {
   const app = document.getElementById('app');
 
   if (state.view === "menu") {
+    const totalPassed = modules.filter(m => isModulePassed(m.id)).length;
     app.innerHTML = `
       ${renderHeader()}
-      <div class="hint">Selecciona un modulo para comenzar.</div>
+      <div class="hint">Selecciona un modulo para comenzar. Progreso: ${totalPassed}/${modules.length} completados</div>
       <div class="content">
-        ${modules.map(m => `
-          <div class="mod-card" style="border-left-color:${m.color}66" onclick="goToModule('${m.id}')"
+        ${modules.map(m => {
+          const passed = isModulePassed(m.id);
+          return `
+          <div class="mod-card" style="border-left-color:${passed ? '#6ac878' : m.color + '66'}" onclick="goToModule('${m.id}')"
             ontouchstart="this.style.background='var(--card-hover)'" ontouchend="this.style.background='var(--card-bg)'">
             <div>
               <div class="mod-title" style="color:${m.color}">${m.icon} ${m.title}</div>
               <div class="mod-sub">${m.subtitle}</div>
             </div>
             <div style="display:flex;align-items:center;gap:6px">
-              <span class="mod-meta">${m.lessons.length} lec</span>
+              ${passed ? '<span class="progress-badge done">COMPLETADO</span>' : `<span class="mod-meta">${m.lessons.length} lec</span>`}
               <span class="mod-arrow" style="color:${m.color}">→</span>
             </div>
           </div>
-        `).join('')}
+        `}).join('')}
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--card-border)">
+          <div style="font-size:10px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">SERVICIOS HOMERO</div>
+
+          <div class="feature-card" onclick="setState({view:'contact'})">
+            <div class="feature-title">Agenda una Demo</div>
+            <div class="feature-desc">30 minutos para ver el sistema multi-agente funcionando con tu negocio real. Sin compromiso.</div>
+          </div>
+
+          <div class="feature-card" onclick="setState({view:'contentgen'})">
+            <div class="feature-title">Genera Contenido con Homero</div>
+            <div class="feature-desc">1 transcripcion = 1 post LinkedIn + 1 thread X + 1 articulo + 3 stories + 1 newsletter. Automatizado.</div>
+          </div>
+        </div>
       </div>
       <div class="menu-footer">Homero Dedicated AI — ${modules.length} Modulos — ${modules.reduce((a,m)=>a+m.lessons.length,0)} Lecciones</div>
     `;
@@ -441,6 +598,8 @@ function render() {
     const lesson = mod.lessons[state.lessonIdx];
     const isLast = state.lessonIdx === mod.lessons.length - 1;
     const isLastMod = midx === modules.length - 1;
+    const quiz = quizzes[mod.id];
+    const showQuiz = isLast && quiz;
     app.innerHTML = `
       ${renderHeader(true, 'LECCIONES', "goBack()", `${mod.icon} ${mod.title}`)}
       <div class="section-header">
@@ -449,6 +608,7 @@ function render() {
       </div>
       <div class="content">
         <div class="lesson-body" style="border-left-color:${mod.color}44">${escapeHtml(lesson.content)}</div>
+        ${showQuiz ? renderQuiz(mod.id, quiz, mod.color) : ''}
       </div>
       ${renderNav(
         'ANTERIOR', 'prevLesson()', state.lessonIdx===0,
@@ -460,18 +620,217 @@ function render() {
     `;
   }
 
+  else if (state.view === "contact") {
+    app.innerHTML = `
+      ${renderHeader(true, 'MENU', "goBack()")}
+      <div class="section-header">
+        <div class="section-tag">CONTACTO</div>
+        <div class="section-title">Agenda tu Demo</div>
+        <div class="section-sub">30 minutos. Tu negocio real. Sin compromiso.</div>
+      </div>
+      <div class="content">
+        ${state.contactSent ? `
+          <div class="form-success">
+            <div style="font-size:32px;margin-bottom:10px">✓</div>
+            <div style="font-weight:600;margin-bottom:6px">Solicitud Enviada</div>
+            <div style="font-size:12px;color:var(--text-muted)">Te contactaremos en menos de 24 horas para agendar tu demo.</div>
+            <button class="quiz-retry" onclick="setState({view:'menu',contactSent:false})" style="margin-top:16px">← Volver al Menu</button>
+          </div>
+        ` : `
+          <div class="contact-section">
+            <div class="contact-title">Cuéntanos sobre tu negocio</div>
+            <div class="contact-sub">Te mostramos cómo el sistema multi-agente se aplica a tu operación.</div>
+            <form onsubmit="submitContact(event)">
+              <div class="form-group">
+                <label class="form-label">Nombre</label>
+                <input class="form-input" type="text" id="c-name" required placeholder="Tu nombre completo">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input class="form-input" type="email" id="c-email" required placeholder="tu@email.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">WhatsApp</label>
+                <input class="form-input" type="tel" id="c-phone" placeholder="+52 669 213 8450">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Empresa / Negocio</label>
+                <input class="form-input" type="text" id="c-company" placeholder="Nombre de tu empresa">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Paquete de interes</label>
+                <select class="form-select" id="c-package">
+                  <option value="">Selecciona una opcion</option>
+                  <option value="docubot">DocuBot Standalone — $15,000 MXN</option>
+                  <option value="core">Core — $100,000 MXN</option>
+                  <option value="premium">Premium — $180,000 MXN</option>
+                  <option value="enterprise">Enterprise — $350,000+ MXN</option>
+                  <option value="demo">Solo quiero ver la demo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">¿Qué quieres automatizar?</label>
+                <textarea class="form-textarea" id="c-message" placeholder="Ejemplo: quiero que mis agentes respondan WhatsApp, generen reportes y organicen mis documentos..."></textarea>
+              </div>
+              <button type="submit" class="form-submit">Solicitar Demo Gratuita</button>
+            </form>
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  else if (state.view === "contentgen") {
+    app.innerHTML = `
+      ${renderHeader(true, 'MENU', "goBack()")}
+      <div class="section-header">
+        <div class="section-tag">SERVICIO PREMIUM</div>
+        <div class="section-title">Genera Contenido con Homero</div>
+        <div class="section-sub">1 transcripcion → todo tu contenido de la semana</div>
+      </div>
+      <div class="content">
+        <div class="lesson-body" style="border-left-color:var(--accent)">
+EL PROBLEMA:
+Sabes que necesitas publicar contenido, pero no tienes tiempo. Cada sesion con un cliente, cada reunion, cada idea — se pierde si no la capturas y la conviertes en contenido.
+
+LA SOLUCION — HOMERO CONTENT ENGINE:
+
+Tú solo haces UNA cosa: grabar tu sesion o reunion (con tl;dv, Zoom, o un audio de WhatsApp).
+
+Homero hace TODO lo demas:
+
+PASO 1: Transcripcion Automatica
+→ Audio o video → texto completo en minutos
+
+PASO 2: Analisis de Contenido
+→ Identifica los temas clave, quotes potentes, datos duros
+
+PASO 3: Generacion Multi-formato
+→ 1 Post LinkedIn (storytelling + autoridad)
+→ 1 Thread X/Twitter (educativo, 5-8 tweets)
+→ 1 Articulo Blog (800-1200 palabras, SEO)
+→ 3 Stories Instagram (visual, carrusel)
+→ 1 Newsletter (resumen para tu lista)
+
+PASO 4: Revision y Publicacion
+→ Todo alineado con tu brand guide
+→ Tono, colores, hashtags personalizados
+→ Listo para copiar y pegar
+
+RESULTADO:
+2 horas de sesion = 1 semana completa de contenido.
+Sin contratar community manager.
+Sin dedicar horas a escribir.
+
+¿COMO SE ACTIVA?
+Incluido en paquetes Premium y Enterprise.
+O como servicio standalone: $5,000 MXN/mes (hasta 8 piezas de contenido por semana).
+        </div>
+        <div style="margin-top:16px">
+          <button class="form-submit" onclick="setState({view:'contact'})">Quiero Este Servicio</button>
+        </div>
+      </div>
+    `;
+  }
+
   window.scrollTo(0, 0);
 }
 
 // ═══════════════════════════════════════════════
 // GLOBAL FUNCTIONS
 // ═══════════════════════════════════════════════
-window.goToModule = (id) => setState({ view: "module", moduleId: id, lessonIdx: 0, searchOpen: false, search: "" });
-window.goToLesson = (i) => setState({ view: "lesson", lessonIdx: i, searchOpen: false, search: "" });
+// ═══════════════════════════════════════════════
+// QUIZ RENDERING
+// ═══════════════════════════════════════════════
+function renderQuiz(moduleId, quiz, color) {
+  const answers = state.quizAnswers;
+  const answered = Object.keys(answers).length;
+  const allAnswered = answered === quiz.length;
+  let score = 0;
+  if (allAnswered) {
+    quiz.forEach((q, i) => { if (answers[i] === q.correct) score++; });
+  }
+
+  return `
+    <div class="quiz-container">
+      <div class="quiz-title" style="color:${color}">QUIZ — Verifica tu aprendizaje</div>
+      ${quiz.map((q, qi) => {
+        const userAnswer = answers[qi];
+        const hasAnswered = userAnswer !== undefined;
+        return `
+          <div class="quiz-question">
+            <div class="quiz-q-text">${qi+1}. ${escapeHtml(q.q)}</div>
+            ${q.opts.map((opt, oi) => {
+              let cls = 'quiz-option';
+              if (hasAnswered) {
+                cls += ' disabled';
+                if (oi === q.correct) cls += ' correct';
+                else if (oi === userAnswer && userAnswer !== q.correct) cls += ' wrong';
+              }
+              return `<button class="${cls}" onclick="answerQuiz('${moduleId}',${qi},${oi})">${escapeHtml(opt)}</button>`;
+            }).join('')}
+          </div>
+        `;
+      }).join('')}
+      ${allAnswered ? `
+        <div class="quiz-result">
+          <div class="quiz-score">${score}/${quiz.length}</div>
+          ${score >= Math.ceil(quiz.length * 0.8) ? `
+            <div class="quiz-pass">APROBADO — Modulo completado</div>
+          ` : `
+            <div class="quiz-fail">Necesitas ${Math.ceil(quiz.length * 0.8)}/${quiz.length} para aprobar</div>
+            <button class="quiz-retry" onclick="retryQuiz()">Reintentar Quiz</button>
+          `}
+        </div>
+      ` : `<div style="text-align:center;font-size:11px;color:var(--text-faint);margin-top:8px">${answered}/${quiz.length} respondidas</div>`}
+    </div>
+  `;
+}
+
+window.answerQuiz = (moduleId, qi, oi) => {
+  if (state.quizAnswers[qi] !== undefined) return;
+  const newAnswers = { ...state.quizAnswers, [qi]: oi };
+  const quiz = quizzes[moduleId];
+  const allAnswered = Object.keys(newAnswers).length === quiz.length;
+  if (allAnswered) {
+    let score = 0;
+    quiz.forEach((q, i) => { if (newAnswers[i] === q.correct) score++; });
+    saveProgress(moduleId, score, quiz.length);
+  }
+  setState({ quizAnswers: newAnswers });
+};
+
+window.retryQuiz = () => setState({ quizAnswers: {} });
+
+window.submitContact = (e) => {
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('c-name').value,
+    email: document.getElementById('c-email').value,
+    phone: document.getElementById('c-phone').value,
+    company: document.getElementById('c-company').value,
+    package: document.getElementById('c-package').value,
+    message: document.getElementById('c-message').value,
+    date: new Date().toISOString()
+  };
+  // Store locally + prepare mailto
+  const leads = JSON.parse(localStorage.getItem('homero-leads') || '[]');
+  leads.push(data);
+  localStorage.setItem('homero-leads', JSON.stringify(leads));
+  // Send via mailto as backup
+  const subject = encodeURIComponent('Demo Homero — ' + data.name + ' (' + data.company + ')');
+  const body = encodeURIComponent('Nombre: ' + data.name + '\nEmail: ' + data.email + '\nWhatsApp: ' + data.phone + '\nEmpresa: ' + data.company + '\nPaquete: ' + data.package + '\nMensaje: ' + data.message);
+  window.open('mailto:leonardo@homerodedicatedai.com?subject=' + subject + '&body=' + body, '_blank');
+  setState({ contactSent: true });
+};
+
+window.goToModule = (id) => setState({ view: "module", moduleId: id, lessonIdx: 0, searchOpen: false, search: "", quizAnswers: {} });
+window.goToLesson = (i) => setState({ view: "lesson", lessonIdx: i, searchOpen: false, search: "", quizAnswers: {} });
 window.goToResult = (modId, li) => setState({ view: "lesson", moduleId: modId, lessonIdx: li, searchOpen: false, search: "" });
 window.goBack = () => {
-  if (state.view === "lesson") setState({ view: "module" });
+  if (state.view === "lesson") setState({ view: "module", quizAnswers: {} });
   else if (state.view === "module") setState({ view: "menu", moduleId: null });
+  else if (state.view === "contact" || state.view === "contentgen") setState({ view: "menu" });
 };
 window.nextLesson = () => { const m = getMod(); if (state.lessonIdx < m.lessons.length - 1) setState({ lessonIdx: state.lessonIdx + 1 }); };
 window.prevLesson = () => { if (state.lessonIdx > 0) setState({ lessonIdx: state.lessonIdx - 1 }); };
